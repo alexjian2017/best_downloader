@@ -1,0 +1,7 @@
+yt-dlp
+pytube
+pycryptodome
+requests
+m3u8
+selenium
+gputil
