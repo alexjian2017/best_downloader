@@ -71,11 +71,13 @@ def m3u8_download(url: str, filename: str, high_quality: int) -> None:
             playlist_url, headers=constant.Fake_Browser_Headers)
 
     # if m3u8 is encoded
-    m3u8uri, m3u8iv, ci = '', '', ''
+    m3u8uri, m3u8iv, ci, vt = '', '', '', None
     for key in m3u8_master.keys:
         if key:
             m3u8uri = key.uri
             m3u8iv = key.iv
+    if m3u8iv:
+        vt = m3u8iv.replace("0x", "")[:16].encode()  # IV取前16位
     if m3u8uri:
         if not m3u8uri.startswith('http'):
             m3u8uri = baseurl + '/' + m3u8uri
@@ -83,12 +85,10 @@ def m3u8_download(url: str, filename: str, high_quality: int) -> None:
         response = requests.get(
             m3u8uri, headers=constant.Fake_Browser_Headers, timeout=10)
         contentKey = response.content
-
-        vt = m3u8iv.replace("0x", "")[:16].encode()  # IV取前16位
         ci = AES.new(contentKey, AES.MODE_CBC, vt)  # 建構解碼器
-    # print(f'm3u8uri: {m3u8uri}')
-    # print(f'm3u8iv: {m3u8iv}')
-    # print(f'ci: {ci}')
+    print(f'm3u8uri: {m3u8uri}')
+    print(f'm3u8iv: {m3u8iv}')
+    print(f'ci: {ci}')
 
     # store .ts file in ts_list
     ts_list = []
@@ -99,8 +99,8 @@ def m3u8_download(url: str, filename: str, high_quality: int) -> None:
         ts_list.append(segment_url)
 
     # crawl .ts file from internet(using request)
-    crawler = Scrape(filename, ci, ts_list)
-    # crawler = Scrape(filename, ci, ts_list[:10])
+    # crawler = Scrape(filename, ci, ts_list)
+    crawler = Scrape(filename, ci, ts_list[10:30])
     crawler.startCrawl()
 
     # transfer to a better video form
