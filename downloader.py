@@ -4,6 +4,8 @@ import re
 import os
 import json
 import time
+
+from icecream import ic
 from Crypto.Cipher import AES
 # pip install pycryptodome
 
@@ -43,8 +45,8 @@ def m3u8_download(url: str, filename: str, high_quality: int) -> None:
     else:
         m3u8url = input("這網址找不到符合的m3u8 url，請你提供給我: ").strip()
     baseurl = '/'.join(m3u8url.split('/')[:-1])
-    print(f'm3u8url: {m3u8url}')
-    print(f'baseurl: {baseurl}')
+    ic(m3u8url, baseurl)
+
     try:
         # m3u8.load/loads 區別是 load 接 url, loads 接 text
         # r = requests.get(m3u8url)
@@ -66,7 +68,8 @@ def m3u8_download(url: str, filename: str, high_quality: int) -> None:
             playlist_url = m3u8_master.playlists[0].uri
         if not playlist_url.startswith('http'):
             playlist_url = baseurl + '/' + playlist_url
-        print(f'playlist_url: {playlist_url}')
+        ic(playlist_url)
+
         m3u8_master = m3u8.load(
             playlist_url, headers=constant.Fake_Browser_Headers)
 
@@ -86,9 +89,7 @@ def m3u8_download(url: str, filename: str, high_quality: int) -> None:
             m3u8uri, headers=constant.Fake_Browser_Headers, timeout=10)
         contentKey = response.content
         ci = AES.new(contentKey, AES.MODE_CBC, vt)  # 建構解碼器
-    print(f'm3u8uri: {m3u8uri}')
-    print(f'm3u8iv: {m3u8iv}')
-    print(f'ci: {ci}')
+    ic(m3u8uri, m3u8iv, ci)
 
     # store .ts file in ts_list
     ts_list = []

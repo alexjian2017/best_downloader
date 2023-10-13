@@ -1,6 +1,8 @@
 from downloader import simple_download, m3u8_download
 from yt_downloader import yt_download
 
+TYPE_OF_FUNCTION = 3
+
 if __name__ == '__main__':
     print("歡迎使用下載系統，以下提供3種服務:")
     print("1. Youtube 影片下載功能")
@@ -12,7 +14,7 @@ if __name__ == '__main__':
             print("輸入不符合要求，請輸入符合要求的數字")
             continue
         choice = int(choice)
-        if 0 < choice <= 3:
+        if 0 < choice <= TYPE_OF_FUNCTION:
             break
         else:
             print("輸入不符合要求，請輸入符合要求的數字")
