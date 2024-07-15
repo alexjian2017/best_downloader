@@ -1,9 +1,14 @@
+import os
+from ssl import SSLCertVerificationError
+from urllib.error import URLError
+
 from pytube import YouTube
 from yt_dlp import YoutubeDL
-import os
 
 
 def download_videos_by_dlp(url: str, target_folder: str = 'result') -> None:
+    if not os.path.exists(target_folder):
+        os.mkdir(target_folder)
     os.chdir(target_folder)
     try:
         with YoutubeDL() as ydl:
@@ -21,7 +26,12 @@ def download_audio_by_pytube(url: str, target_folder: str = 'result') -> None:
         print("Title: ", title)
         print("Views: ", yt.views)
         file = yt.streams.filter(only_audio=True).first()
+        if file is None:
+            print('cannot find this video')
+            return
         file.download(target_folder, f'{title}.mp3')
+    except URLError:
+        print('請在"是否僅下載聲音檔" 選擇 ex')
     except Exception as e:
         print(e)
     else:
@@ -37,7 +47,12 @@ def download_videos_by_pytube(url: str, high_quality: int, target_folder: str = 
             file = yt.streams.get_highest_resolution()
         else:
             file = yt.streams.get_lowest_resolution()
+        if file is None:
+            print('cannot find this video')
+            return
         file.download(target_folder)
+    except URLError:
+        print('請在"是否僅下載聲音檔" 選擇 ex')
     except Exception as e:
         print(e)
     else:
