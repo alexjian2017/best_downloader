@@ -76,6 +76,7 @@ def yt_download(url: str, high_quality: int):
 
 if __name__ == '__main__':
     url = input('請輸入你要下載的影片網址: ').strip()
-    high_quality = input('是否下載最高畫質(Y/N)? ').strip().lower()
-    high_quality = 1 if high_quality == 'y' else 0
-    yt_download(url, high_quality)
+    download_videos_by_dlp(url)
+    # high_quality = input('是否下載最高畫質(Y/N)? ').strip().lower()
+    # high_quality = 1 if high_quality == 'y' else 0
+    # yt_download(url, high_quality)
